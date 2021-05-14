@@ -20,5 +20,6 @@ setup(name='enlighten2',
       package_data={'enlighten2.tleap': ['*.in'],
                     'enlighten2': ['sander/*']},
       entry_points={'console_scripts': ['prep.py = enlighten2.prep:main',
-                                        'dynam.py = enlighten2.dynam:main']},
+                                        'dynam.py = enlighten2.dynam:main',
+                                        'qmmm.py = enlighten2.qmmm:main']},
       zip_safe=False)
