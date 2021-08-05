@@ -49,7 +49,6 @@ def main():
     multiplicity = params['multiplicity']
     skf_path = params['skf_path']
     qm_path = params['qm_path']
-    nimages = params['nimages']
 
     # read charges from topology file (amber charges must be divided by 18.2223 to get the units right)
     charges = utils.get_amber_charges(args.parmtop.name)
@@ -69,16 +68,9 @@ def main():
             f.write("my_qm = {}(method = '{}', charge = {}, mult = {}, path = '{}',)\n".format(qm_engine,qm_method,qm_charge,multiplicity,qm_path))
         f.write("my_mm = DL_POLY(ff='../{}', rcut=999.99)\n".format(args.parmtop.name))
         f.write("my_qmmm = QMMM(frag = my_enzyme, qm = my_qm, mm = my_mm, qm_region = indicies_qm_region,)\n")
-        if args.type == 'sp':
-            f.write("my_sp = SP(theory=my_qmmm)\n")
-            f.write("my_sp.run(dryrun=False)\n")
         if args.type == 'opt':
             f.write("my_opt = Opt(theory=my_qmmm)\n")
             f.write("my_opt.run(dryrun=False)\n")
-        if args.type == 'neb':
-            f.write("product = Fragment(coords='{}')\n".format(args.products.name))
-            f.write("my_neb = Opt(theory=my_qmmm, frag2=product, neb='frozen', nimages={})\n".format(nimages))
-            f.write("my_neb.run(dryrun=False)\n")
 
 
     # run Py-ChemShell

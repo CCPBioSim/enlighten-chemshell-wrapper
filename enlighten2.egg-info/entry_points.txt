@@ -1,0 +1,5 @@
+[console_scripts]
+dynam.py = enlighten2.dynam:main
+prep.py = enlighten2.prep:main
+qmmm.py = enlighten2.qmmm:main
+
