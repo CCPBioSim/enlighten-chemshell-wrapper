@@ -37,7 +37,8 @@ def main():
             'nimages' : 8, 
             'climbing_image' : 'yes', 
             'qm_region' : [], 
-            'qm_charge' : []}
+            'qm_charge' : [],
+            'active_region' : 'qm_region'}
 
     if args.params is not None:
         params.update(json.load(args.params))
@@ -50,6 +51,7 @@ def main():
     skf_path = params['skf_path']
     qm_path = params['qm_path']
     nimages = params['nimages']
+    active_region = params['active_region']
 
     # read charges from topology file (amber charges must be divided by 18.2223 to get the units right)
     charges = utils.get_amber_charges(args.parmtop.name)
@@ -73,11 +75,12 @@ def main():
             f.write("my_sp = SP(theory=my_qmmm)\n")
             f.write("my_sp.run(dryrun=False)\n")
         if args.type == 'opt':
-            f.write("my_opt = Opt(theory=my_qmmm)\n")
+            f.write("my_opt = Opt(theory=my_qmmm, active={})\n".format(active_region))
             f.write("my_opt.run(dryrun=False)\n")
         if args.type == 'neb':
             f.write("product = Fragment(coords='{}')\n".format(args.products.name))
-            f.write("my_neb = Opt(theory=my_qmmm, frag2=product, neb='frozen', nimages={})\n".format(nimages))
+            f.write("product.save('new2.pdb')\n")
+            f.write("my_neb = Opt(theory=my_qmmm, active={}, neb='frozen', frag2=product, nimages={}, nebk=0.01, neb_climb_test=3.0, neb_freeze_test=1.0, coordinates='cartesian', maxstep=0.9, trust_radius='const',)\n".format(active_region,nimages))
             f.write("my_neb.run(dryrun=False)\n")
 
 
